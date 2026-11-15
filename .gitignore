@@ -2,5 +2,5 @@
 dinghy/build/
 build/
 .DS_Store
-dinghy/firmware/src/mt32_roms.h
+dinghy/firmware/src/mt32/mt32_roms.h
 __pycache__/

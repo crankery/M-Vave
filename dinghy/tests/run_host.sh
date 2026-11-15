@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 mkdir -p build/host
 N=dinghy; D=
 if [ "${BOARD:-fm1}" = smk37 ]; then N=dinghy-smk37; D=-DBOARD_SMK37=1; fi
-APP_SOURCE=${DINGHY_APP_SOURCE:-firmware/src/dmx.c}
+APP_SOURCE=${DINGHY_APP_SOURCE:-firmware/src/dinghy/dinghy.c}
 [ -f "$APP_SOURCE" ] || { echo "app source missing: $APP_SOURCE" >&2; exit 1; }
 cc -O2 -Wall -Wno-unused-function -DDINGHY_HOST $D -DAPP_VER="\"${APP_VER:-dev}\"" -Ifirmware/hal -Ifirmware/src -Ifirmware/gen -o build/host/$N "$APP_SOURCE"
 build/host/$N build/host/$N ${1:+"$1"}

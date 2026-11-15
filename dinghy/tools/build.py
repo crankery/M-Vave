@@ -55,13 +55,13 @@ SDK_SHA256 = {
 }
 
 BOARD = "fm1"                       # fm1 (default) or smk37: BOARD env or --board
-BOARD_PREFIX = {"fm1": os.environ.get("DINGHY_PRODUCT_PREFIX", "FM-1_94"), "smk37": "SMK-37 Pro_99"}
+BOARD_PREFIX = {"fm1": os.environ.get("DINGHY_PRODUCT_PREFIX", "FM-1_99"), "smk37": "SMK-37 Pro_99"}
 BOARD_DEFS = {"fm1": [], "smk37": ["-DBOARD_SMK37=1"]}
 MODELS = {"pro": "SMK-37 Pro", "elite": "SMK-37 Elite", "mke": "MKE-P37"}   # smk37: one keyboard, three names
 DATA_FAMILY = "DINGHY"              # the SMK store's owner tag (store.h): 1..7 of A-Z 0-9. Your fork: your own
-SCREEN_NAME = os.environ.get("DINGHY_SCREEN_NAME", "DMX LAB")
-SCREEN_COLOUR = int(os.environ.get("DINGHY_SCREEN_COLOUR", "0xFCC8"), 0)
-APP_SOURCE = SRC / os.environ.get("DINGHY_APP_SOURCE", "firmware/src/dmx.c")
+SCREEN_NAME = os.environ.get("DINGHY_SCREEN_NAME", "DINGHY")
+SCREEN_COLOUR = int(os.environ.get("DINGHY_SCREEN_COLOUR", "0xB47F"), 0)
+APP_SOURCE = SRC / os.environ.get("DINGHY_APP_SOURCE", "firmware/src/dinghy/dinghy.c")
 PRODUCT = BOARD_PREFIX["fm1"] + "0"
 VERSION = None                      # APP_VER for release builds
 
@@ -282,7 +282,7 @@ def mmio_check():
             break
         regs |= more
     errors = []
-    for f in sorted([*(FW / "src").glob("*.[ch]"), *(FW / "loader").glob("*.c")]):
+    for f in sorted([*(FW / "src").rglob("*.[ch]"), *(FW / "loader").glob("*.c")]):
         for no, ln in enumerate(strip(f.read_text()).splitlines(), 1):
             where = f"{f.relative_to(FW)}:{no}"
             for rx, what in ((MMIO_LIT, "register/window address"), (MMIO_CAST, "volatile pointer cast"),

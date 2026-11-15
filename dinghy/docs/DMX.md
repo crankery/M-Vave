@@ -2,7 +2,7 @@
 
 `tools/dmx_decode.py` converts the raw 8-bit sound EPROM bytes to 16-bit PCM.
 Its integer transfer curve comes from Table 3 in `Docs/am6070.pdf`. The
-generated `dinghy/firmware/src/dmx_decode_table.h` is ready for an integer-only FM-1 sample player;
+generated `dinghy/firmware/src/dmx/dmx_decode_table.h` is ready for an integer-only FM-1 sample player;
 it does not embed any sound ROMs.
 
 Preview a sound on a computer:
@@ -18,7 +18,7 @@ metadata, and original cards varied in playback speed. To regenerate the C
 table after changing the decoder:
 
 ```sh
-python3 tools/dmx_decode.py --c-header dinghy/firmware/src/dmx_decode_table.h
+python3 tools/dmx_decode.py --c-header dinghy/firmware/src/dmx/dmx_decode_table.h
 ```
 
 The decoder uses datasheet sign polarity (bit 7 set gives positive output).
@@ -37,10 +37,10 @@ alternative 8 KiB DX sounds available from the source menu.
 
 `tools/dmx_embed.py` packs fourteen sound streams (seven 4 KiB stock card ROMs,
 two 16 KiB cymbal sets, five 8 KiB DX alternatives) into
-`dinghy/firmware/src/dmx_roms.h` as read-only
+`dinghy/firmware/src/dmx/dmx_roms.h` as read-only
 bytes for the FM-1's flash. `make host` regenerates the header and runs Dinghy's
-host simulator with `dmx/host_demo.txt`. The app in `dinghy/firmware/src/dmx.c` uses
-`dinghy/firmware/src/dmx_player.h`: eight one-shot channels, one active sound per
+host simulator with `dinghy/tests/scripts/dmx_demo.txt`. The app in `dinghy/firmware/src/dmx/dmx.c` uses
+`dinghy/firmware/src/dmx/dmx_player.h`: eight one-shot channels, one active sound per
 channel, integer lookup decoding, 24 kHz nominal source playback into Dinghy's
 44.1 kHz stereo output. The per-channel sample playback is dry; the master
 output now has a simple compressor and stereo echo.

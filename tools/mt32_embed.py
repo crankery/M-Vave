@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CONTROL = ROOT / "roms/mt32/mt32_ctrl_1_07.rom"
 PCM = ROOT / "roms/mt32/mt32_pcm.rom"
-OUTPUT = ROOT / "dinghy/firmware/src/mt32_roms.h"
+OUTPUT = ROOT / "dinghy/firmware/src/mt32/mt32_roms.h"
 CLASSES = ("piano", "organ", "keyboard", "sbrass", "synbass", "synth1", "synth2",
            "strings", "guitar", "bass", "wind1", "wind2", "brass", "mallet",
            "special", "percussion", "effects")

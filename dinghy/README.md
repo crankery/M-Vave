@@ -10,10 +10,12 @@ keys, knobs and LEDs, the screen, flash storage, and the same again for the M-Va
 with the part you actually want to write.
 
 ```
-firmware/src/experiment.c     <- your firmware: ~300 lines, a 4-voice sine. Start here.
-firmware/src/platform.c   <- the plumbing (boot, USB, MIDI, updates, audio ISR, storage). Done; read it, don't fight it.
-firmware/src/store.h      <- where your data lives in flash, per board
-firmware/src/*.c, hal/    <- Felucca's platform, as SLOOP / sloopDX / OberVave carry it; the SMK-37 layer
+firmware/src/dinghy/dinghy.c <- the original 4-voice sine app; start here.
+firmware/src/experiment/      <- a separate copy for experiments
+firmware/src/dmx/, mt32/, dubsiren/ <- the other app sources and their headers
+firmware/src/platform.c      <- shared boot, USB, MIDI, audio, and storage code
+firmware/src/store.h         <- where your data lives in flash, per board
+firmware/src/*.c, hal/       <- shared platform and hardware code
 ```
 
 Dinghy is based on [Felucca](https://github.com/hugelton/Felucca) by Leo Kuroshita (Hügelton Instruments), with its
@@ -83,7 +85,7 @@ tried here first, in seconds.
 
 ### 4. Your first change
 
-Open [firmware/src/experiment.c](firmware/src/experiment.c) (~200 lines). The sound is `app_audio()`: it gets an empty
+Open [firmware/src/dinghy/dinghy.c](firmware/src/dinghy/dinghy.c) (~200 lines). The sound is `app_audio()`: it gets an empty
 buffer of stereo frames and adds to it. Make the sine a square:
 
 ```c

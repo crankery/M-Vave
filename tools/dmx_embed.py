@@ -22,7 +22,7 @@ SOUNDS = (
     ("DX_TOM", ("DXTOM",)),
     ("DX_PERC2", ("DXSHAKE",)),
 )
-OUTPUT = ROOT / "dinghy" / "firmware" / "src" / "dmx_roms.h"
+OUTPUT = ROOT / "dinghy" / "firmware" / "src" / "dmx" / "dmx_roms.h"
 
 
 def main() -> None:

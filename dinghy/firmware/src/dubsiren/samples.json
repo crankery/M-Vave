@@ -1,0 +1,9 @@
+{
+  "sample_rate": 16000,
+  "target_window_rms_dbfs": -6.8,
+  "samples": [
+    {"key": 12, "name": "GUN COCK", "source": "refs/gun cock.mp3"},
+    {"key": 13, "name": "GUNSHOT", "source": "refs/gunshot 357.mp3"},
+    {"key": 14, "name": "AIRHORN", "source": "refs/DJ Airhorn Sound Effect 001 - (192 Kbps).mp3"}
+  ]
+}

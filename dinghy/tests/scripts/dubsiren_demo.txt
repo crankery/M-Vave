@@ -1,0 +1,40 @@
+# Wail, hand-ridden sweep, three synthetic shots, then three ADPCM samples.
+0 keys 128
+400 btn 1
+850 keys 0
+900 enc 4 2
+1000 keys 128
+1050 btndown 5
+1400 btnup 5
+1460 btndown 2
+1530 btnup 2
+1600 keys 0
+1650 btn 0
+1720 btn 0
+1800 shot
+1900 enc 3 4
+2000 keys 128
+2060 keys 0
+2450 enc 3 1
+2550 keys 128
+2610 keys 0
+3250 enc 3 1
+3300 btn 1
+3350 keys 128
+3410 keys 0
+4200 shot
+4500 keys 4096
+4550 keys 0
+5100 keys 8192
+5150 keys 0
+7000 shot
+7200 keys 16384
+7250 keys 0
+10800 shot
+11050 btn 3
+11100 shot
+11200 keys 16384
+11500 keys 0
+11600 btn 3
+11700 shot
+13500 end
