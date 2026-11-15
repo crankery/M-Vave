@@ -55,13 +55,14 @@ SDK_SHA256 = {
 }
 
 BOARD = "fm1"                       # fm1 (default) or smk37: BOARD env or --board
-BOARD_PREFIX = {"fm1": "FM-1_94", "smk37": "SMK-37 Pro_99"}   # DMX prototype on FM-1; SMK-37 keeps Dinghy's identity
+BOARD_PREFIX = {"fm1": os.environ.get("DINGHY_PRODUCT_PREFIX", "FM-1_94"), "smk37": "SMK-37 Pro_99"}
 BOARD_DEFS = {"fm1": [], "smk37": ["-DBOARD_SMK37=1"]}
 MODELS = {"pro": "SMK-37 Pro", "elite": "SMK-37 Elite", "mke": "MKE-P37"}   # smk37: one keyboard, three names
 DATA_FAMILY = "DINGHY"              # the SMK store's owner tag (store.h): 1..7 of A-Z 0-9. Your fork: your own
-SCREEN_NAME = "DMX LAB"             # the update loader's screen (FM-1, ldr_screen.c): the name and its colour (RGB565)
-SCREEN_COLOUR = 0xFCC8              # orange
-PRODUCT = "FM-1_940"                # local DMX prototype identity; verify before any public release
+SCREEN_NAME = os.environ.get("DINGHY_SCREEN_NAME", "DMX LAB")
+SCREEN_COLOUR = int(os.environ.get("DINGHY_SCREEN_COLOUR", "0xFCC8"), 0)
+APP_SOURCE = SRC / os.environ.get("DINGHY_APP_SOURCE", "firmware/src/dmx.c")
+PRODUCT = BOARD_PREFIX["fm1"] + "0"
 VERSION = None                      # APP_VER for release builds
 
 
@@ -176,7 +177,7 @@ def build_app():
     cmds = [("cc", "-c", FW / "crt0.S", "-o", OUT / "crt0.o"),
             ("cc", "-c", FW / "hal" / "fm1_vec.S", "-o", OUT / "fm1_vec.o"),
             ("cc", "-c", FW / "hal" / "fm1_isr.S", "-o", OUT / "fm1_isr.o"),
-            ("cc", *flags, "-c", FW / "src" / "dinghy.c", "-o", OUT / "dinghy.o")]
+            ("cc", *flags, "-c", APP_SOURCE, "-o", OUT / "dinghy.o")]
     tc_all(*cmds)
     elf = OUT / "dinghy.elf"
     ld = FW / "app.ld"
@@ -306,6 +307,8 @@ def main():
     ap.add_argument("--sdk", type=Path, help="JieLi AC79 SDK checkout (default: $AC79_SDK)")
     a = ap.parse_args()
     BOARD = (a.board or os.environ.get("BOARD") or "fm1").lower().replace("-", "")
+    if not APP_SOURCE.is_file():
+        raise SystemExit(f"app source missing: {APP_SOURCE}")
     if BOARD not in BOARD_PREFIX:
         raise SystemExit(f"BOARD={BOARD}: use fm1 or smk37")
     model = (a.model or os.environ.get("MODEL") or "pro").lower()

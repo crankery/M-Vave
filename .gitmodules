@@ -1,0 +1,3 @@
+[submodule "mt32-pi"]
+	path = mt32-pi
+	url = git@github.com:dwhinham/mt32-pi.git

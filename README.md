@@ -1,10 +1,20 @@
-# FM-1 DMX drum prototype
+# FM-1 firmware experiments
 
-This project uses [Dinghy](https://github.com/zvenson/dinghy) as the M-VAVE FM-1 hardware platform. The app at `dinghy/firmware/src/dinghy.c` uses the first 24 FM-1 keys (F3–E5) and MIDI channel 10 notes 36–59 for the DMX's eight three-trigger groups. The stock kick, snare, hi-hat, two toms, percussion, ride, and crash ROM sets now provide audio on all 24 triggers. Each channel has one retriggerable voice and adjustable attenuation; select a channel with SELECT, adjust its level with KNOB 1, and choose a stock or DX alternative with KNOB 2 where available. KNOB 3 adjusts the master echo mix, KNOB 4 its tail, and a compressor follows the echo on the final mix. Playback is guessed at 24 kHz, decoded with an integer lookup table and mixed into Dinghy's 44.1 kHz audio output. See `dmx/README.md` for the decoder, mapping, and remaining fidelity limits.
+## License
+
+The original root-level build scripts, `tools/` scripts, and project-written documentation and demo scripts outside `dinghy/` are offered under the [MIT License](LICENSE). The FM-1 firmware platform and app sources in `dinghy/` retain their [GPL-3.0-only license](dinghy/LICENSE); the assembled firmware is subject to that license. The `mt32-pi` submodule has its [own license](mt32-pi/LICENSE). The sound ROMs and third-party PDFs are not covered by this MIT license. LAX-32 is a design reference; no source from it has been incorporated here.
+
+## Firmware targets
+
+Set `TARGET` near the top of the root `Makefile` to `dmx`, `experiment`, or `mt32`. The default is `dmx`; `experiment` currently contains Dinghy's original four-voice sine-wave app; `mt32` plays selected MT-32 sound classes with ROM PCM and approximate LA-style synthesized partials. Set `MT32_CLASSES` in the Makefile and run `make mt32-list` to inspect the available classes. `make host`, `make build`, and `make test` use the selected app. You can also try `make host TARGET=experiment` or `make build TARGET=experiment` without editing the file. Builds produce `build/dmx.fwsc`, `build/experiment.fwsc`, or `build/mt32.fwsc`, and `make install` uses the selected package. The targets have separate FM-1 package identities and update-screen names. Add future apps as `dinghy/firmware/src/<target>.c` and register their identity and screen settings in the Makefile.
+
+For the MT-32 experiment, run `make host TARGET=mt32` and `make build TARGET=mt32`. See [mt32/README.md](mt32/README.md) for the supported controls and limits.
+
+This project uses [Dinghy](https://github.com/zvenson/dinghy) as the M-VAVE FM-1 hardware platform. The app at `dinghy/firmware/src/dmx.c` uses the first 24 FM-1 keys (F3–E5) and MIDI channel 10 notes 36–59 for the DMX's eight three-trigger groups. The stock kick, snare, hi-hat, two toms, percussion, ride, and crash ROM sets now provide audio on all 24 triggers. Each channel has one retriggerable voice and adjustable attenuation; select a channel with SELECT, adjust its level with KNOB 1, and choose a stock or DX alternative with KNOB 2 where available. KNOB 3 adjusts the master echo mix, KNOB 4 its tail, and a compressor follows the echo on the final mix. Playback is guessed at 24 kHz, decoded with an integer lookup table and mixed into Dinghy's 44.1 kHz audio output. See `dmx/README.md` for the decoder, mapping, and remaining fidelity limits.
 
 The source is fetched by `./bootstrap.sh` into `dinghy/`. The script records the upstream commit in `dinghy/.upstream-commit`, does not flash a device, and refuses to overwrite an existing `dinghy/` directory. The repository source could not be fetched from this environment because GitHub DNS is unavailable; run the script from a networked shell.
 
-From this directory, `make help` lists the routine commands. Run `make setup` once, `make host` for a WAV and screen preview of the seven-drum demo, and `make build` for an installable FM-1 package. Both commands regenerate the ROM and decoder headers in `dinghy/firmware/src/` from the local ROM files. `make test` builds that package and runs Dinghy's host and package tests. `make info` and `make install` talk to a connected FM-1; `make install` checks for the package and then uses Dinghy's installer, which asks before writing. `make clean` removes generated files under `dinghy/build/`.
+From this directory, `make help` lists the routine commands. Run `make setup` once, `make host` for a WAV and screen preview of the seven-drum demo, and `make build` for an installable FM-1 package in `build/dmx.fwsc`. For the DMX target, both commands regenerate the ROM and decoder headers in `dinghy/firmware/src/` from the local ROM files. `make test` builds that package and runs Dinghy's host and package tests. `make info` and `make install` talk to a connected FM-1; `make install` checks for the package and then uses Dinghy's installer, which asks before writing. `make clean` removes generated files under `dinghy/build/` and the target packages under `build/`.
 
 ## First run on this Mac
 
@@ -17,7 +27,7 @@ cd dinghy
 tests/run_host.sh
 ```
 
-The host run writes a WAV file and screen PNGs under `dinghy/build/host/`. Edit `dinghy/firmware/src/dinghy.c` or `dinghy/firmware/src/dmx_player.h`, then rerun `make host` to hear and see the change. Read `dinghy/docs/API.md` for the platform calls.
+The host run writes a WAV file and screen PNGs under `dinghy/build/host/`. Edit `dinghy/firmware/src/dmx.c` or `dinghy/firmware/src/dmx_player.h`, then rerun `make host` to hear and see the change. Read `dinghy/docs/API.md` for the platform calls.
 
 This copy has a small macOS host fix in `dinghy/firmware/src/gfx.c`: the host build leaves its canvas in ordinary static storage because macOS Clang rejects the firmware-only `.pool` section name. Device builds keep the original section placement. The FM-1 host test completed on this Mac and produced `dinghy.wav` and two screen PNGs.
 
@@ -34,7 +44,7 @@ make build     # regenerates ROM headers, then writes dinghy/build/dinghy.fwsc
 
 The FM-1 device package has built successfully here, and Dinghy's host and package tests have passed. If the toolchain or SDK lives elsewhere, set `JIELI_TOOLCHAIN` or `AC79_SDK` as described in Dinghy's README.
 
-`./build.sh` compiles `firmware/src/dinghy.c` for the FM-1, builds the USB update loader, checks the image, and packs both into the installable `.fwsc`. The WAV and PNG files from `tests/run_host.sh` are previews; they cannot be installed. Run the device build only after the host test passes, and use a newly generated package only if the build exits successfully. The default target is the FM-1; no board option is needed.
+`./build.sh` compiles the selected source in `firmware/src/` for the FM-1, builds the USB update loader, checks the image, and packs both into the installable `.fwsc`. The WAV and PNG files from `tests/run_host.sh` are previews; they cannot be installed. Run the device build only after the host test passes, and use a newly generated package only if the build exits successfully. The default target is the FM-1; no board option is needed.
 
 ## Install on the FM-1
 

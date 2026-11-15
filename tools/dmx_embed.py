@@ -5,6 +5,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+ROM_DIR = ROOT / "roms" / "dmx"
 SOUNDS = (
     ("KICK", ("21KICK",)),
     ("SNARE", ("SNARE6",)),
@@ -29,7 +30,7 @@ def main() -> None:
     for label, names in SOUNDS:
         parts = []
         for name in names:
-            path = ROOT / "DMX_Roms" / f"{name}.BIN"
+            path = ROM_DIR / f"{name}.BIN"
             data = path.read_bytes()
             expected = 8192 if label.startswith("DX_") else 4096
             if len(data) != expected:

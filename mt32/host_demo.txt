@@ -1,0 +1,35 @@
+# AcouPiano1, AcouPiano2, Elec Org 1, Str Sect 1, Flute 1,
+# Trumpet 1, synth-only Syn Brass1, and the last preset.
+0 midi 0xC0 0 0
+150 midi 0x90 60 100
+700 midi 0x80 60 0
+900 shot
+1000 midi 0xC0 1 0
+1100 midi 0x90 64 110
+1700 midi 0x80 64 0
+1900 shot
+2000 midi 0xC0 8 0
+2100 midi 0x90 67 120
+2400 midi 0x80 67 0
+2500 shot
+2900 midi 0xC0 48 0
+3000 midi 0x90 60 110
+4000 midi 0x80 60 0
+4200 shot
+4300 midi 0xC0 72 0
+4400 midi 0x90 69 110
+5200 midi 0x80 69 0
+5400 shot
+5500 midi 0xC0 88 0
+5600 midi 0x90 60 110
+6400 midi 0x80 60 0
+6600 shot
+6800 midi 0xC0 24 0
+6900 midi 0x90 60 110
+7500 midi 0x80 60 0
+7700 shot
+7800 midi 0xC0 127 0
+7900 midi 0x90 60 110
+8500 midi 0x80 60 0
+8700 shot
+8900 end

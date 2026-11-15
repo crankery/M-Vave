@@ -1,0 +1,7 @@
+# Piano 1 on the FM-1's bottom key (F3), then middle C for comparison.
+0 midi 0xC0 0 0
+100 midi 0x90 53 100
+900 midi 0x80 53 0
+1200 midi 0x90 60 100
+2000 midi 0x80 60 0
+2300 end

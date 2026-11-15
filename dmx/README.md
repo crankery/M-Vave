@@ -8,7 +8,7 @@ it does not embed any sound ROMs.
 Preview a sound on a computer:
 
 ```sh
-python3 tools/dmx_decode.py DMX_Roms/21KICK.BIN
+python3 tools/dmx_decode.py roms/dmx/21KICK.BIN
 ```
 
 The WAV appears at `build/dmx-preview/21KICK.wav`. The default playback rate is
@@ -39,7 +39,7 @@ alternative 8 KiB DX sounds available from the source menu.
 two 16 KiB cymbal sets, five 8 KiB DX alternatives) into
 `dinghy/firmware/src/dmx_roms.h` as read-only
 bytes for the FM-1's flash. `make host` regenerates the header and runs Dinghy's
-host simulator with `dmx/host_demo.txt`. The app in `dinghy/firmware/src/dinghy.c` uses
+host simulator with `dmx/host_demo.txt`. The app in `dinghy/firmware/src/dmx.c` uses
 `dinghy/firmware/src/dmx_player.h`: eight one-shot channels, one active sound per
 channel, integer lookup decoding, 24 kHz nominal source playback into Dinghy's
 44.1 kHz stereo output. The per-channel sample playback is dry; the master
