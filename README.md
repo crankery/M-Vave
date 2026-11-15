@@ -1,10 +1,10 @@
-# FM-1 firmware starter
+# FM-1 DMX drum prototype
 
-This folder is prepared to start an M-VAVE FM-1 firmware using [Dinghy](https://github.com/zvenson/dinghy), a small GPL-3.0-only community template. Dinghy supplies the hardware platform, update path, USB/TRS MIDI, audio, controls, screen, storage, and a four-voice sine synth. Its application entry point is `dinghy/firmware/src/dinghy.c`.
+This project uses [Dinghy](https://github.com/zvenson/dinghy) as the M-VAVE FM-1 hardware platform. The app at `dinghy/firmware/src/dinghy.c` uses the first 24 FM-1 keys (F3–E5) and MIDI channel 10 notes 36–59 for the DMX's eight three-trigger groups. The stock kick, snare, hi-hat, two toms, percussion, ride, and crash ROM sets now provide audio on all 24 triggers. Each channel has one retriggerable voice and adjustable attenuation; select a channel with SELECT, adjust its level with KNOB 1, and choose a stock or DX alternative with KNOB 2 where available. KNOB 3 adjusts the master echo mix, KNOB 4 its tail, and a compressor follows the echo on the final mix. Playback is guessed at 24 kHz, decoded with an integer lookup table and mixed into Dinghy's 44.1 kHz audio output. See `dmx/README.md` for the decoder, mapping, and remaining fidelity limits.
 
 The source is fetched by `./bootstrap.sh` into `dinghy/`. The script records the upstream commit in `dinghy/.upstream-commit`, does not flash a device, and refuses to overwrite an existing `dinghy/` directory. The repository source could not be fetched from this environment because GitHub DNS is unavailable; run the script from a networked shell.
 
-From this directory, `make help` lists the routine commands. Run `make setup` once, `make host` for the WAV and screen previews, and `make build` for an installable FM-1 package. `make test` builds that package and runs Dinghy's host and package tests. `make info` and `make install` talk to a connected FM-1; `make install` checks for the package and then uses Dinghy's installer, which asks before writing. `make clean` removes generated files under `dinghy/build/`.
+From this directory, `make help` lists the routine commands. Run `make setup` once, `make host` for a WAV and screen preview of the seven-drum demo, and `make build` for an installable FM-1 package. Both commands regenerate the ROM and decoder headers in `dinghy/firmware/src/` from the local ROM files. `make test` builds that package and runs Dinghy's host and package tests. `make info` and `make install` talk to a connected FM-1; `make install` checks for the package and then uses Dinghy's installer, which asks before writing. `make clean` removes generated files under `dinghy/build/`.
 
 ## First run on this Mac
 
@@ -17,7 +17,7 @@ cd dinghy
 tests/run_host.sh
 ```
 
-The host run writes a WAV file and screen PNGs under `dinghy/build/host/`. Edit `dinghy/firmware/src/dinghy.c`, then rerun `tests/run_host.sh` to hear and see the change. Read `dinghy/docs/API.md` for the platform calls.
+The host run writes a WAV file and screen PNGs under `dinghy/build/host/`. Edit `dinghy/firmware/src/dinghy.c` or `dinghy/firmware/src/dmx_player.h`, then rerun `make host` to hear and see the change. Read `dinghy/docs/API.md` for the platform calls.
 
 This copy has a small macOS host fix in `dinghy/firmware/src/gfx.c`: the host build leaves its canvas in ordinary static storage because macOS Clang rejects the firmware-only `.pool` section name. Device builds keep the original section placement. The FM-1 host test completed on this Mac and produced `dinghy.wav` and two screen PNGs.
 
@@ -25,15 +25,14 @@ This copy has a small macOS host fix in `dinghy/firmware/src/gfx.c`: the host bu
 
 Dinghy's device build needs Docker running on macOS, the JieLi PI32v2 Linux toolchain, and the JieLi AC79 SDK. The toolchain and SDK are external downloads; inspect their licenses and Dinghy's `LICENSING.md` before distributing a build.
 
+This Mac now has the compiler at `~/.jieli/toolchain`, the SDK at `~/fw-AC79_AIoT_SDK`, and Colima as its Docker engine. The three SDK files Dinghy uses match its pinned hashes. From the project root:
+
 ```sh
-cd dinghy
-tools/get_toolchain.sh
-git clone --depth 1 --branch AC79NN_SDK_V1.2.1_2023-12-13 \
-  https://gitee.com/Jieli-Tech/fw-AC79_AIoT_SDK.git "$HOME/fw-AC79_AIoT_SDK"
-./build.sh
+colima start   # needed after a reboot
+make build     # regenerates ROM headers, then writes dinghy/build/dinghy.fwsc
 ```
 
-`./build.sh` should produce `dinghy/build/dinghy.fwsc`. If the toolchain or SDK already lives elsewhere, set `JIELI_TOOLCHAIN` or `AC79_SDK` as described in Dinghy's README. This Mac currently has no Docker command or JieLi toolchain, so a device build has not been verified here.
+The FM-1 device package has built successfully here, and Dinghy's host and package tests have passed. If the toolchain or SDK lives elsewhere, set `JIELI_TOOLCHAIN` or `AC79_SDK` as described in Dinghy's README.
 
 `./build.sh` compiles `firmware/src/dinghy.c` for the FM-1, builds the USB update loader, checks the image, and packs both into the installable `.fwsc`. The WAV and PNG files from `tests/run_host.sh` are previews; they cannot be installed. Run the device build only after the host test passes, and use a newly generated package only if the build exits successfully. The default target is the FM-1; no board option is needed.
 
@@ -51,7 +50,7 @@ python3 tools/fm1_install.py --info
 python3 tools/fm1_install.py build/dinghy.fwsc
 ```
 
-For your own firmware, edit `dinghy/firmware/src/dinghy.c` and repeat the host test and build. Before sharing packages, follow `dinghy/docs/MAKE-IT-YOURS.md` to assign a distinct name, storage magic, and package identity; otherwise your copy identifies itself as Dinghy (`FM-1_990`). `./build.sh --release 0.1` gives a versioned package after that identity work.
+The DMX prototype uses package identity `FM-1_940` and shows `DMX LAB` on its app and update screens. Before sharing packages, check that identity against the community's current use and follow `dinghy/docs/MAKE-IT-YOURS.md` for the remaining release details. The bundled sound ROMs also need suitable redistribution rights before a public package is released.
 
 ## Explore the open pi32v2 toolchain
 

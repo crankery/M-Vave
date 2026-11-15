@@ -5,12 +5,12 @@ PACKAGE ?= $(DINGHY)/build/dinghy.fwsc
 VENV_PY := $(CURDIR)/.venv/bin/python3
 export PATH := $(CURDIR)/.venv/bin:$(PATH)
 
-.PHONY: help setup bootstrap venv host build test info install clean
+.PHONY: help setup bootstrap venv roms host build test info install clean
 
 help:
 	@printf '%s\n' \
 	  'make setup    Fetch Dinghy (if needed) and install Python dependencies' \
-	  'make host     Render WAV and screen PNG previews on this computer' \
+	  'make host     Render the dry DMX drum app on this computer' \
 	  'make build    Build the FM-1 package: dinghy/build/dinghy.fwsc' \
 	  'make test     Build, then run Dinghy package and host tests' \
 	  'make info     Show the connected FM-1 firmware identity' \
@@ -27,11 +27,15 @@ venv:
 	@if [ ! -x "$(VENV_PY)" ]; then python3 -m venv .venv; fi
 	@"$(VENV_PY)" -m pip install Pillow mido python-rtmidi
 
-host:
-	@test -f "$(DINGHY)/tests/run_host.sh" || { echo 'Run make setup first.' >&2; exit 1; }
-	@cd "$(DINGHY)" && tests/run_host.sh
+roms:
+	@python3 tools/dmx_embed.py
+	@python3 tools/dmx_decode.py --c-header dinghy/firmware/src/dmx_decode_table.h
 
-build:
+host: roms
+	@test -f "$(DINGHY)/tests/run_host.sh" || { echo 'Run make setup first.' >&2; exit 1; }
+	@cd "$(DINGHY)" && tests/run_host.sh ../dmx/host_demo.txt
+
+build: roms
 	@test -f "$(DINGHY)/build.sh" || { echo 'Run make setup first.' >&2; exit 1; }
 	@cd "$(DINGHY)" && ./build.sh
 

@@ -55,13 +55,13 @@ SDK_SHA256 = {
 }
 
 BOARD = "fm1"                       # fm1 (default) or smk37: BOARD env or --board
-BOARD_PREFIX = {"fm1": "FM-1_99", "smk37": "SMK-37 Pro_99"}   # identity: prefix + minor (0: a dev build)
+BOARD_PREFIX = {"fm1": "FM-1_94", "smk37": "SMK-37 Pro_99"}   # DMX prototype on FM-1; SMK-37 keeps Dinghy's identity
 BOARD_DEFS = {"fm1": [], "smk37": ["-DBOARD_SMK37=1"]}
 MODELS = {"pro": "SMK-37 Pro", "elite": "SMK-37 Elite", "mke": "MKE-P37"}   # smk37: one keyboard, three names
 DATA_FAMILY = "DINGHY"              # the SMK store's owner tag (store.h): 1..7 of A-Z 0-9. Your fork: your own
-SCREEN_NAME = "DINGHY"              # the update loader's screen (FM-1, ldr_screen.c): the name and its colour (RGB565)
-SCREEN_COLOUR = 0xB47F              # lilac, #B48CFF
-PRODUCT = "FM-1_990"                # Dinghy: 99N (OUR_LOADER in the installer wants FM-1_9NN). Your fork: pick your own
+SCREEN_NAME = "DMX LAB"             # the update loader's screen (FM-1, ldr_screen.c): the name and its colour (RGB565)
+SCREEN_COLOUR = 0xFCC8              # orange
+PRODUCT = "FM-1_940"                # local DMX prototype identity; verify before any public release
 VERSION = None                      # APP_VER for release builds
 
 

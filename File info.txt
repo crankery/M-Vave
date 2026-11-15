@@ -1,0 +1,4 @@
+DMX23-3.BIN 		main micro processor board Eprom 
+DMX-10-SHL-406-1.BIN  	effects extender board eprom 1
+DMX-10-SHL-406-2.BIN  	effects extender board eprom 2
+DMX-10-SHL-406-3.BIN  	effects extender board eprom 3

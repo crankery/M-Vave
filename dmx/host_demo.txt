@@ -1,0 +1,24 @@
+# 24 consecutive FM-1 keys, bit 0 F3; MIDI channel 10, notes 36-59.
+150 keys 1
+220 keys 0
+250 enc 0 1
+300 enc 2 -10
+350 enc 3 1
+400 keys 2
+470 keys 0
+500 enc 4 4
+550 enc 5 3
+650 keys 4
+720 keys 0
+900 keys 8
+970 keys 0
+1150 keys 64
+1220 keys 0
+1400 keys 512
+1470 keys 0
+1650 keys 1048576
+1720 keys 0
+1900 midi 0x99 57 127
+2100 keys 8422052
+2180 keys 0
+2600 end
